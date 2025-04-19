@@ -33,9 +33,11 @@ export default async function handler(req, res) {
     });
 
     const buffer = await pptx.write("nodebuffer");
-    const base64 = buffer.toString("base64");
 
-    return res.status(200).json({ filename: "Weekly_Report.pptx", base64 });
+    // Set headers for file download
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+    res.setHeader("Content-Disposition", 'attachment; filename="Weekly_Report.pptx"');
+    res.send(buffer);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to generate PowerPoint" });
